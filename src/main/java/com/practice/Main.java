@@ -1,8 +1,11 @@
 package com.practice;
 
+import com.practice.dao.StudentDao;
+import com.practice.entity.Student;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.io.IOException;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -10,15 +13,31 @@ public class Main {
     public static void main(String[] args) {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Program is starting...................");
+        System.out.println("Program is starting...................");
         ApplicationContext context = new ClassPathXmlApplicationContext("config.xml");
-        JdbcTemplate template = context.getBean("springJDBCTemplate", JdbcTemplate.class);
+        StudentDao studentDao = context.getBean("studentDao", StudentDao.class);
 
-        //Insert query
-        String query = "insert into student(id, name, city) values (?,?,?)";
+        Student student = new Student();
+        //For inserting data
+        student.setId(102);
+        student.setName("Ankush");
+        student.setCity("Jamshedpur");
+        int insertResult = studentDao.insert(student);
+        System.out.println("Rows inserted: " + insertResult);
 
-        //Fire the query
-        int result = template.update(query, 103, "Hifza", "Oman");
-        System.out.println(result);
+        //For updating data
+        student.setId(102);
+        student.setName("Hifza");
+        student.setCity("Oman");
+        int updateResult = studentDao.updateData(student);
+        System.out.println("Rows updated: " + updateResult);
+
+        //For deleting data
+        int deleteResult = studentDao.delete(102);
+        System.out.println("Rows deleted: " + deleteResult);
+
+        //For selecting data
+        Student studentResult = studentDao.getStudent(102);
+        System.out.println(studentResult);
     }
 }
